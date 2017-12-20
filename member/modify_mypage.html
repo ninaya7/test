@@ -1,0 +1,248 @@
+
+<?php
+	//입력 값 불러오기
+	@session_start();
+	include '../dbconfig.php';
+	$user_id = $_SESSION['session_id'];
+
+	$result = mysql_query("select * from members where id='$user_id'");
+
+	while($row = mysql_fetch_array($result, MYSQL_ASSOC)){
+		$user_name = $row['name'];
+		$user_email = $row['email'];
+		$user_mobile = $row['mobile'];
+		$user_phone = $row['phone'];
+		$user_zipcode = $row['zipcode'];//우편번호
+		$user_ad1 = $row['address1'];//기본주소
+		$user_ad2 = $row['address2'];//상세주소
+		$user_sms_yn = $row['check_sms'];//SMS수신
+		$user_get_email_yn = $row['get_email'];//메일수신
+	}
+	
+	//이메일 문자열 구분
+	$split_email = explode('@', $user_email);
+	$email1 = $split_email[0];
+	$email2 = $split_email[1];
+	
+	//일반전화번호
+	$split_mobile = explode('-', $user_mobile);
+
+	$mo1 = $split_mobile[0];
+	$mo2 = $split_mobile[1];
+	$mo3 = $split_mobile[2];
+	
+?>
+
+
+<div id="container" class="container-full">
+	<div id="content" class="content">
+		<div class="inner">
+			<div class="tit-box-h3">
+				<h3 class="tit-h3">내정보수정</h3>
+				<div class="sub-depth">
+					<span><i class="icon-home"><span>홈</span></i></span>
+					<strong>내정보수정</strong>
+				</div>
+			</div>
+
+			<div class="section-content">
+
+				<table border="0" cellpadding="0" cellspacing="0" class="tbl-col-join">
+					<caption class="hidden">강의정보</caption>
+					<colgroup>
+						<col style="width:15%"/>
+						<col style="*"/>
+					</colgroup>
+				
+					<tbody>
+						<tr>
+							<th scope="col"><span class="icons">*</span>이름</th>
+							<td><?php echo $user_name; ?></td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons">*</span>아이디</th>
+							<td><input type="text" class="input-text" style="width:302px" placeholder="영문자로 시작하는 4~15자의 영문소문자, 숫자" id="input_uid" name="input_uid" value="<?php echo $user_id; ?>"/><a href="#" class="btn-s-tin ml10">중복확인</a></td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons">*</span>비밀번호</th>
+							<td><input type="password" id="input_upwd1" name="input_upwd1" class="input-text" style="width:302px" placeholder="8-15자의 영문자/숫자 혼합"/></td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons">*</span>비밀번호 확인</th>
+							<td><input type="password" id="input_upwd2" name="input_upwd2" class="input-text" style="width:302px"/></td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons">*</span>이메일주소</th>
+							<td>
+								<input type="text" class="input-text" style="width:138px" id="input_email1" name="input_email1" value="<?php echo $email1; ?>"/> @ <input type="text" class="input-text" style="width:138px" id="input_email2" name="input_email2" value="<?php echo $email2; ?>"/>
+								<select class="input-sel" style="width:160px">
+									<option value="">선택입력</option>
+									<option value="">선택입력</option>
+									<option value="">선택입력</option>
+									<option value="">선택입력</option>
+									<option value="">선택입력</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons">*</span>휴대폰 번호</th>
+							<td><?php echo $user_mobile; ?></td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons"></span>일반전화 번호</th>
+							<td><input type="text" class="input-text" style="width:88px" id="input_phone1" name="input_phone1" value="<?php echo $mo1; ?>"/> - <input type="text" class="input-text" style="width:88px" id="input_phone2" name="input_phone2" value="<?php echo $mo2; ?>"/> - <input type="text" class="input-text" style="width:88px" id="input_phone3" name="input_phone3" value="<?php echo $mo3; ?>"/></td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons">*</span>주소</th>
+							<td>
+								<p >
+									<label>우편번호 <input type="text" class="input-text ml5" style="width:242px" disabled id="input_zip" name="input_zip" value="<?php echo $user_zipcode; ?>"/></label><a href="#" class="btn-s-tin ml10" id="zipcodeBtn">주소찾기</a>
+								</p>
+								<p class="mt10">
+									<label>기본주소 <input type="text" class="input-text ml5" style="width:719px" id="input_ad1" name="input_ad1" value="<?php echo $user_ad1; ?>"/></label>
+								</p>
+								<p class="mt10">
+									<label>상세주소 <input type="text" class="input-text ml5" style="width:719px" id="input_ad2" name="input_ad2" value="<?php echo $user_ad2; ?>"/></label>
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons">*</span>SMS수신</th>
+							<td>
+								<div class="box-input">
+									<label class="input-sp">
+										<input type="radio" name="sms" id="sms" checked="checked" value="y"/>
+										<span class="input-txt">수신함</span>
+									</label>
+									<label class="input-sp">
+										<input type="radio" name="sms" id="sms"  <?php if($user_sms_yn == 'n') echo 'checked="checked"'; ?> value="n"/>
+										<span class="input-txt">미수신</span>
+									</label>
+								</div>
+								<p>SMS수신 시, 해커스의 혜택 및 이벤트 정보를 받아보실 수 있습니다.</p>
+							</td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons">*</span>메일수신</th>
+							<td>
+								<div class="box-input" >
+									<label class="input-sp">
+										<input type="radio" name="mail" id="mail" checked="checked" value="y"/>
+										<span class="input-txt">수신함</span>
+									</label>
+									<label class="input-sp">
+										<input type="radio" name="mail" id="mail" <?php if($user_get_email_yn == 'n') echo 'checked="checked"'; ?> value="n"/>
+										<span class="input-txt">미수신</span>
+									</label>
+								</div>
+								<p>메일수신 시, 해커스의 혜택 및 이벤트 정보를 받아보실 수 있습니다.</p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="box-btn">
+					<!--<a href="#" class="btn-l">정보수정</a>-->
+					<a href="/test/member/index.php" class="btn-l" id="submit" name="submit">정보수정</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+
+//1-모든 입력값 들어있는지 유효성 체크
+//2-비밀번호일치한지 아닌지 확인
+//3-post로 form 값 넘겨줌
+
+	$('#submit').click(function(){
+		
+		var u_name = '<?php echo $user_name ?>';
+		var u_id= $("#input_uid").val();
+		var u_pwd1 = $("#input_upwd1").val();
+		var u_pwd2 = $("#input_upwd2").val();
+		var u_email1 = $("#input_email1").val();
+		var u_email2 = $("#input_email2").val();
+		var u_mobile = '<?php echo $user_mobile ?>';
+		var u_phone1 = $("#input_phone1").val();
+		var u_phone2 = $("#input_phone2").val();
+		var u_phone3 = $("#input_phone3").val();
+		var u_zip = $("#input_zip").val();
+		var u_address1 = $("#input_ad1").val();
+		var u_address2 = $("#input_ad2").val();
+		var u_sms = $('input:radio[id=sms]:checked').val();
+		var u_getemail = $('input:radio[id=mail]:checked').val();
+
+
+
+		if(!u_name || !u_id || !u_pwd1 || !u_pwd2 || !u_email1 || !u_email2 || !u_mobile || !u_zip || !u_address1 ||!u_address2 ||!u_sms ||!u_getemail){
+				
+				alert("필수입력란이 비었습니다. 확인해주세요");
+				return false;
+
+		}else{
+			
+			alert("모든 필수값이 입력되었습니다");
+		}
+
+
+		if(u_pwd1 != u_pwd2){
+
+				alert("비밀번호가 일치하지 않습니다.");
+				return false;
+		
+		}else{
+
+				alert("비밀번호가 일치합니다.");
+		
+		}
+		
+		
+
+		$.ajax({
+				type: "POST", 
+				url: "./db_member_update.php", 
+				data: 
+					({
+						u_name:u_name,
+						u_id:u_id,
+						u_pwd1:u_pwd1,
+						u_pwd2:u_pwd2,
+						u_email1:u_email1,
+						u_email2:u_email2,
+						u_mobile:u_mobile,
+						u_phone1:u_phone1,
+						u_phone2:u_phone2,
+						u_phone3:u_phone3,
+						u_zip:u_zip, 
+						u_address1:u_address1,
+						u_address2:u_address2,
+						u_sms:u_sms, 
+						u_getemail:u_getemail
+					}),
+				dataType: "text",
+				success: function(data){
+					alert(data);
+				}
+		});
+	});
+</script>
+
+
+<script>
+	$("#zipcodeBtn").click(function(){
+
+	new daum.Postcode({
+		oncomplete: function(data) {
+			document.getElementById("input_zip").value = data.zonecode;
+			document.getElementById("input_ad1").value = data.address;
+
+		}
+	}).open();
+
+	});
+
+</script>
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+
+

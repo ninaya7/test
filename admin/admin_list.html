@@ -1,0 +1,96 @@
+
+<?php include '../header.php'?>
+
+<?php include '../dbconfig.php'?>
+
+<div id="container" class="container">
+	<div id="nav-left" class="nav-left">
+		<div class="nav-left-tit"> 
+			<span>직무교육 안내</span>
+		</div>
+		<ul class="nav-left-lst">
+			<li><a href="/test/admin/index.php">강의 목록</a></li>
+			<li><a href="/test/admin/index.php?mode=write">강의 등록</a></li> <!--강의등록 페이지(admin_write.html) mode = write이동-->
+		</ul>
+	</div>
+
+	<div id="content" class="content">
+		<div class="tit-box-h3">
+			<h3 class="tit-h3">강의 목록</h3><br/>
+			* 강의 수정은 강의명을 클릭하세요
+		</div>
+
+		<table border="0" cellpadding="0" cellspacing="0" class="tbl-bbs">
+			<caption class="hidden">수강후기</caption>
+			<colgroup>
+				<col style="width:8%"/>
+				<col style="width:8%"/>
+				<col style="*"/>
+				<col style="width:15%"/>
+				<col style="width:12%"/>
+			</colgroup>
+
+			<thead>
+				<tr>
+					<th scope="col">번호</th>
+					<th scope="col">분류</th>
+					<th scope="col">강의명</th>
+					<th scope="col">강의자</th>
+					<th scope="col">수강시간</th>
+				</tr>
+			</thead>
+	 
+			<tbody>
+				
+				<!--페이징처리 : 페이지별 게스글 수-->
+				<?php
+				$board_perpage = 6; //한페이지의 보여지는 게시글 수
+				if(isset($_GET["page"])){
+
+					$page = $_GET["page"];
+
+				}else{
+
+					$page = 1;
+
+				}
+				$start_from = ($page -1) * $board_perpage;
+				$sql = "SELECT * FROM lecture ORDER BY id DESC LIMIT $start_from, $board_perpage";
+				$rs_result = mysql_query($sql);
+				while($row = mysql_fetch_assoc($rs_result)){
+				?>
+					<tr>
+						<td><?php echo $row["id"]; ?></td>
+						<td><?php echo $row["category_code"]; ?></td>
+						<?php echo "<td><a href = /test/admin/admin_modify.html?no=".$row['id'].">".$row["lecture_name"]."</td>" ?>
+						<td><?php echo $row["lecturer_name"]; ?></td>
+						<td><?php echo $row["lecture_runtime"]; ?></td>
+					</tr>
+				<?php }; ?>
+
+			</tbody>
+		</table>
+		<div class="box-paging">
+			<a href="#"><i class="icon-first"><span class="hidden">첫페이지</span></i></a>
+			<a href="#"><i class="icon-prev"><span class="hidden">이전페이지</span></i></a>
+			
+			<!--페이징처리 : 하단 번호-->
+			<?php 
+				$sql = "select count(*) from lecture";
+				$rs_result = mysql_query($sql);
+				$row = mysql_fetch_row($rs_result); 
+				$total_records = $row[0]; //총 게시글 수
+				$total_pages = ceil($total_records / $board_perpage); //총 페이지 수
+				
+				for($i = 1; $i<$total_pages + 1; $i++){
+					echo "<a href='/test/admin/index.php?page=$i'>".$i."</a>";
+				}
+			?>
+
+			<a href="#"><i class="icon-next"><span class="hidden">다음페이지</span></i></a>
+			<a href="#"><i class="icon-last"><span class="hidden">마지막페이지</span></i></a>
+		</div>
+	</div>
+</div>
+
+<?php include '../footer.php'?>

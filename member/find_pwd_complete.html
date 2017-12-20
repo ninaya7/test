@@ -1,0 +1,123 @@
+<?php include '../header.php'?>
+
+<?php
+	include '../dbconfig.php';
+
+	$name = $_POST['name'];
+	$mobile = $_POST['mo1']."-".$_POST['mo2']."-".$_POST['mo3'];
+	$email = $_POST['email1']."@".$_POST['email2'];
+	
+	if($_POST['mo1']){
+
+		$sql ="select * from members where name='$name' and mobile='$mobile'";
+
+	}
+
+	if($_POST['email1']){
+
+		$sql = "select * from members where name='$name' and email='$email'";
+
+	}
+	
+	$result = mysql_query($sql);
+
+	while ($row = mysql_fetch_assoc($result)) {
+		$mb_id = $row['id'];
+	}
+
+?>
+
+
+<div id="container" class="container-full">
+	<div id="content" class="content">
+		<div class="inner">
+			<div class="tit-box-h3">
+				<h3 class="tit-h3">아이디/비밀번호 찾기</h3>
+				<div class="sub-depth">
+					<span><i class="icon-home"><span>홈</span></i></span>
+					<strong>아이디/비밀번호 찾기</strong>
+				</div>
+			</div>
+
+			<ul class="tab-list">
+				<li><a href="#">아이디 찾기</a></li>
+				<li class="on"><a href="#">비밀번호 찾기</a></li>
+			</ul>
+
+			<div class="tit-box-h4">
+				<h3 class="tit-h4">비밀번호 재설정</h3>
+			</div>
+
+			<div class="section-content mt30">
+				<table border="0" cellpadding="0" cellspacing="0" class="tbl-col-join">
+					<caption class="hidden">비밀번호 재설정</caption>
+					<colgroup>
+						<col style="width:17%"/>
+						<col style="*"/>
+					</colgroup>
+				
+					<tbody>
+						<tr>
+							<th scope="col">신규 비밀번호 입력</th>
+							<td><input type="password" class="input-text" placeholder="영문자로 시작하는 4~15자의 영문소문자,숫자" style="width:302px" id="new_pwd" name="new_pwd"/></td>
+						</tr>
+						<tr>
+							<th scope="col">신규 비밀번호 재확인</th>
+							<td><input type="password" class="input-text" style="width:302px" id="new_pwd2" name="new_pwd2"/></td>
+						</tr>
+						<input type="hidden" id="id" name="id" value="<?php echo $mb_id; ?>"/>
+					</tbody>
+				</table>
+				<div class="box-btn">
+					<input type="button" href="#" class="btn-l" id="submit" name="submit" value="확인"/>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+$("#submit").click(function(){
+			
+			var new_pwd = $("#new_pwd").val();
+			var new_pwd2 = $("#new_pwd2").val();
+			var id = $("#id").val();
+			var test_ ="";
+							
+			if(new_pwd != new_pwd2){
+				return false;
+			}
+			
+			//input 데이터 넘기기
+			$.ajax({
+				type: "POST", 
+				url: "auth_pwd_update.php", 
+				async:false,
+				data: 
+					({
+						new_pwd:new_pwd,
+						new_pwd2:new_pwd2,
+						id:id
+					}),
+				dataType: "text",
+				success: function(data){
+					test_=data;
+				}
+			});
+			if(test_ == 1){
+				
+				alert("비밀번호가 변경되었습니다.");
+				location.href="../login.html";
+	
+			}else{
+				
+				alert("비밀번호를 확인해주세요");
+				return false;
+			
+			}
+		});
+</script>
+
+
+
+<?php include '../footer.php'?>

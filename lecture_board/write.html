@@ -1,0 +1,215 @@
+<?php
+	@session_start();
+	$session_id = $_SESSION['session_id'];
+	//echo $session_id;
+?>
+<div id="container" class="container">
+	<div id="nav-left" class="nav-left">
+		<div class="nav-left-tit"> 
+			<span>직무교육 안내</span>
+		</div>
+		<ul class="nav-left-lst">
+			<li><a href="#">해커스 HRD 소개</a></li>
+			<li><a href="#">사업주훈련</a></li>
+			<li><a href="#">근로자카드</a></li>
+			<li><a href="#">학습안내</a></li>
+			<li class="on"><a href="#">수강후기</a></li>
+		</ul>
+	</div>
+
+	<div id="content" class="content">
+		<div class="tit-box-h3">
+			<h3 class="tit-h3">수강후기</h3>
+			<div class="sub-depth">
+				<span><i class="icon-home"><span>홈</span></i></span>
+				<span>직무교육 안내</span>
+				<strong>수강후기</strong>
+			</div>
+		</div>
+
+		<div class="user-notice">
+			<strong class="fs16">유의사항 안내</strong>
+			<ul class="list-guide mt15">
+				<li class="tc-brand">수강후기는 신청하신 강의의 학습진도율 25%이상 달성시 작성가능합니다. </li>
+				<li>욕설(욕설을 표현하는 자음어/기호표현 포함) 및 명예훼손, 비방,도배글, 상업적 목적의 홍보성 게시글 등 사회상규에 반하는 게시글 및 강의내용과 상관없는 서비스에 대해 작성한 글들은 삭제 될 수 있으며, 법적 책임을 질 수 있습니다.</li>
+			</ul>
+		</div>
+
+		<table border="0" cellpadding="0" cellspacing="0" class="tbl-col">
+			<caption class="hidden">강의정보</caption>
+			<colgroup>
+				<col style="width:15%"/>
+				<col style="*"/>
+			</colgroup>
+
+			<tbody>
+				<tr>
+					<th scope="col">강의</th>
+					<td>
+						<select class="input-sel" style="width:160px" id="code" name="code" onchange="changeCategory()"> 
+							<option value="00">분류</option> 
+							<option value="01">일반직무</option>
+							<option value="02">산업직무</option>
+							<option value="03">공통역량</option>
+							<option value="04">어학 및 자격증</option>
+						</select>
+
+						<select class="input-sel ml5" style="width:454px" id="lecture_name" name="lecture_name">
+							
+							
+							<option value="">강의명</option>
+							
+
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th scope="col">제목</th>
+					<td><input type="text" class="input-text" style="width:611px" id="title" name="title"/></td>
+				</tr>
+				<tr>
+					<th scope="col">강의만족도</th>
+					<td>
+						<ul class="list-rating-choice">
+							<li>
+								<label class="input-sp ico">
+									<input type="radio" name="radio" id="" checked="checked" value="5"/>
+									<span class="input-txt">5</span>
+								</label>
+								<span class="star-rating">
+									<span class="star-inner" style="width:100%"></span>
+								</span>
+							</li>
+							<li>
+								<label class="input-sp ico">
+									<input type="radio" name="radio" id="" value="4"/>
+									<span class="input-txt">4</span>
+								</label>
+								<span class="star-rating">
+									<span class="star-inner" style="width:80%"></span>
+								</span>
+							</li>
+							<li>
+								<label class="input-sp ico">
+									<input type="radio" name="radio" id="" value="3"/>
+									<span class="input-txt">3</span>
+								</label>
+								<span class="star-rating">
+									<span class="star-inner" style="width:60%"></span>
+								</span>
+							</li>
+							<li>
+								<label class="input-sp ico">
+									<input type="radio" name="radio" id="" value="2"/>
+									<span class="input-txt">2</span>
+								</label>
+								<span class="star-rating">
+									<span class="star-inner" style="width:40%"></span>
+								</span>
+							</li>
+							<li>
+								<label class="input-sp ico">
+									<input type="radio" name="radio" id=""/>
+									<span class="input-txt" value="1"1</span>
+								</label>
+								<span class="star-rating">
+									<span class="star-inner" style="width:20%"></span>
+								</span>
+							</li>
+						</ul>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<!--에디터 영역 컨텐츠값 받아오기-->
+		
+		<div class="editor-wrap">
+			<? include "editor.php"; ?>
+		</div>
+		
+		<!--에디터 테스트-->
+		<!--<div class="editor-wrap">
+			<textarea name="ir1" id="ir1" class="nse_content"  row="10" cols="105">
+			
+			</textarea>
+				<script type="text/javascript">
+				var oEditors = [];
+				nhn.husky.EZCreator.createInIFrame({
+					oAppRef: oEditors,
+					elPlaceHolder: "ir1",
+					sSkinURI: "./nse_files/SmartEditor2Skin.html",
+					fCreator: "createSEditor2"
+				});
+				</script>
+		</div>-->
+		<!--에디터 테스트-->
+		<div class="box-btn t-r">
+			<a href="#" class="btn-m-gray">목록</a>
+			<a href="index.php?mode=list" class="btn-m ml5" onclick="registReview()">저장</a>
+		</div>		
+	</div>
+</div>
+
+<!--입력된 데이터값 저장하는 ajax 구현-->
+
+
+<script>
+	
+	//수강후기 : 강의코드, 강의명 콤보박스 구현
+	function changeCategory(){
+
+		var category = $("#code").val();
+
+		id_numbers = new Array();
+		$("#lecture_name").empty();
+
+		$.ajax({
+				type: "POST", 
+				url: "get_lecture_name.php", 
+				data: ({
+						code:category
+					  }),
+				dataType: "json",
+				success: function(data){
+					for(var i = 0; i < data.length ; i++){
+						id_numbers = data;
+						//alert(id_numbers[i]);
+						$("#lecture_name").append("<option value='"+id_numbers[i]+"' >"+id_numbers[i]+"</option>");
+					}
+				}
+				
+		}); 
+			
+	}
+
+	//수강후기 등록
+	function registReview(){
+		var code = $("#code").val();
+		var lecture_name = $("#lecture_name").val();
+		var title = $("#title").val();
+		var score = $(":input:radio[name=radio]:checked").val();
+		var content = Editor.getContent(); //에디터 내용 가져오기
+		var login_name = "<?php echo $session_id; ?>";
+
+		
+		$.ajax({
+				type: "POST", 
+				url: "register_lecture.php", 
+				data: ({
+						code:code,
+						lecture_name:lecture_name,
+						title:title,
+						score:score,
+						content:content,
+						login_name:login_name
+					  }),
+				dataType: "text",
+				success: function(data){
+					alter(data);
+				}
+				
+		}); 
+
+	}
+</script>

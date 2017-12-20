@@ -1,0 +1,138 @@
+<?php
+	include "../header.php";
+
+	@session_start();
+	$session_id = $_SESSION['session_id'];
+	include "../dbconfig.php";
+
+	/*
+	$review_no = $_GET['no'];
+	$sql = "select * from review where id = ".$review_no;
+	$result = mysql_query($sql);
+	$row = mysql_fetch_assoc($result);
+	*/
+	$review_no = $_GET['no'];
+	
+	//조회수 증가
+	$sql_hit = "update review set hit = hit + 1 where id =".$review_no;
+	$result_hit = mysql_query($sql_hit);
+
+	$sql = "SELECT * FROM lecture AS L RIGHT JOIN review AS R
+			ON L.category_code = R.category_code where R.id = ".$review_no;
+	$result = mysql_query($sql);
+	$row = mysql_fetch_assoc($result);
+
+
+?>
+
+
+<div id="container" class="container">
+	<div id="nav-left" class="nav-left">
+		<div class="nav-left-tit"> 
+			<span>직무교육 안내</span>
+		</div>
+		<ul class="nav-left-lst">
+			<li><a href="#">해커스 HRD 소개</a></li>
+			<li><a href="#">사업주훈련</a></li>
+			<li><a href="#">근로자카드</a></li>
+			<li><a href="#">학습안내</a></li>
+			<li class="on"><a href="#">수강후기</a></li>
+		</ul>
+	</div>
+
+	<div id="content" class="content">
+		<div class="tit-box-h3">
+			<h3 class="tit-h3">수강후기</h3>
+			<div class="sub-depth">
+				<span><i class="icon-home"><span>홈</span></i></span>
+				<span>직무교육 안내</span>
+				<strong>수강후기</strong>
+			</div>
+		</div>
+
+		<table border="0" cellpadding="0" cellspacing="0" class="tbl-bbs-view">
+			<caption class="hidden">수강후기</caption>
+			<colgroup>
+				<col style="*"/>
+				<col style="width:20%"/>
+			</colgroup>
+			<tbody>
+				<tr>
+				<th scope="col" id="title" name="title"><?php echo $row['title']; ?></th>
+				<th scope="col" class="user-id">작성자 | <?php echo $row['login_id']; ?> 조회수 | <?php echo $row['hit']; ?><br/> 등록일 | <?php echo $row['upload_time']; ?><br/> </th>
+				</tr>
+					<td colspan="2">
+						<div class="box-rating">
+							<span class="tit_rating">강의만족도</span>
+							<?php if($row['score'] == 5){?>
+								<span class="star-rating">
+									<span class="star-inner" style="width:100%"></span>
+								</span>
+							<? }else if($row['score'] == 4){ ?>
+								<span class="star-rating">
+									<span class="star-inner" style="width:80%"></span>
+								</span>
+							<? }else if($row['score'] == 3){ ?>
+								<span class="star-rating">
+									<span class="star-inner" style="width:60%"></span>
+								</span>
+							<? }else if($row['score'] == 2){?>
+								<span class="star-rating">
+									<span class="star-inner" style="width:40%"></span>
+								</span>
+							<? }else if($row['score'] == 1){?>
+								<span class="star-rating">
+									<span class="star-inner" style="width:20%"></span>
+								</span>
+							<? } ?>
+						</div>
+						<?php echo $row['content']; ?>
+						
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		
+		<p class="mb15"><strong class="tc-brand fs16"><?php echo $row['login_id']; ?>님의 수강하신 강의 정보</strong></p>
+		
+		<table border="0" cellpadding="0" cellspacing="0" class="tbl-lecture-list">
+			<caption class="hidden">강의정보</caption>
+			<colgroup>
+				<col style="width:166px"/>
+				<col style="*"/>
+				<col style="width:110px"/>
+			</colgroup>
+			<tbody>
+				<tr>
+					<td>
+						<a href="#" class="sample-lecture">
+							<!--<img src="http://via.placeholder.com/144x101" alt="" width="144" height="101" />-->
+							<img src="http://test.hackers.com/test/admin/uploads/<?php echo $row['img_name']; ?>" alt="" width="144" height="101" />
+							<span class="tc-brand">샘플강의 ▶</span>
+						</a>
+					</td>
+					<td class="lecture-txt">
+						<em class="tit mt10"><?php echo $row['lecture_name']; ?></em>
+						<p class="tc-gray mt20">강사: <?php echo $row['lecturer_name']; ?> | 학습난이도 : <?php if($row['lecture_lev'] == "h"){ echo "상급";}else if($row['lecture_lev'] == "m"){ echo "중급"; }else if($row['lecture_lev'] == "l"){echo "초급"; }  ?> | 교육시간: <?php echo $row['lecture_runtime']; ?></p>
+					</td>
+					<td class="t-r"><a href="#" class="btn-square-line">강의<br />상세</a></td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<!--작성자와 현재 세션 아이디와 같으면 수정 및 삭제 가능-->
+			<div class="box-btn t-r">
+				<a href="/test/lecture_board/index.php?mode=list" class="btn-m-gray">목록</a>
+		<?php if($row['login_id'] == $session_id){?>
+				<?php echo "<a href='/test/lecture_board/modify.html?no=".$review_no."' class='btn-m ml5'>수정</a> "?>
+				<a href="#" class="btn-m-dark">삭제</a>
+		<?php }else{}?>
+			</div>
+		<?php include "paging.php"; ?>
+	</div>
+</div>
+
+<?php 
+	include "../footer.php";
+?>

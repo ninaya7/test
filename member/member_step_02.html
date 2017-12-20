@@ -1,0 +1,146 @@
+
+<div id="container" class="container-full">
+	<div id="content" class="content">
+		<div class="inner">
+			<div class="tit-box-h3">
+				<h3 class="tit-h3">회원가입</h3>
+				<div class="sub-depth">
+					<span><i class="icon-home"><span>홈</span></i></span>
+					<strong>회원가입 완료</strong>
+				</div>
+			</div>
+
+			<div class="join-step-bar">
+				<ul>
+					<li><i class="icon-join-agree"></i> 약관동의</li>
+					<li class="on"><i class="icon-join-chk"></i> 본인확인</li>
+					<li class="last"><i class="icon-join-inp"></i> 정보입력</li>
+				</ul>
+			</div>
+
+			<div class="tit-box-h4">
+				<h3 class="tit-h4">본인인증</h3>
+			</div>
+			<div class="section-content after">
+			<form name="authForm">
+			<input type="hidden" name="mode" value="authSMS">
+				<div class="identify-box" style="width:100%;height:190px;">
+					<div class="identify-inner">
+						<strong>휴대폰 인증</strong>
+						<p>주민번호 없이 메시지 수신가능한 휴대폰으로 1개 아이디만 회원가입이 가능합니다. </p>
+
+						<br />
+						<input type="text" class="input-text" style="width:50px" maxlength=3 name="mobileNum1" id="mobileNum1" > -
+						<input type="text" class="input-text" style="width:50px" maxlength=4 name="mobileNum2" id="mobileNum2"> - 
+						<input type="text" class="input-text" style="width:50px" maxlength=4 name="mobileNum3" id="mobileNum3">
+						<a href="javascript:void(0)" class="btn-s-line" id="getAuthBtn" name="authNum">인증번호 받기</a>
+						<input type="hidden" class="input-text" name="chk_mo1" value="<?php echo $_SESSION["phone1"]; ?>"/>
+
+						<br /><br />
+						<input type="text" class="input-text" name ="verifyNum" style="width:200px"/>
+						<a href="#" class="btn-s-line" id="verifyBtn">인증번호 확인</a>
+					</div>
+					<input type="hidden" class="input-text" name="mo_auth" value="<?php echo $_SESSION["phone_security"]; ?>"/>
+					<i class="graphic-phon"><span>휴대폰 인증</span></i>
+				</div>
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+
+	$(document).ready(function(){
+			
+		//버튼클릭 : 인증번호 받기
+		$('#getAuthBtn').click('on', function(){
+						
+			if($('input[name="mobileNum1"]').val() != '010'){
+				alert('핸드폰 번호를 체크해주세요.');
+				$('input[name="mobileNum1"]').focus();
+				return;
+			}
+
+			if($('input[name="mobileNum2"]').val() == ''){
+				alert('핸드폰 번호를 체크해주세요');
+				$('input[name="mobileNum2"]').focus();
+				return;
+			}
+
+			if($('input[name="mobileNum3"]').val() == ''){
+				alert('핸드폰 번호를 체크해주세요');
+				$('input[name="mobileNum3"]').focus();
+				return;
+			}
+
+			//핸드폰번호에 숫자 외 문자 입력되었을 경우
+			
+
+
+			//ajax : 인증번호 전송
+			$.post( "proc.ajax.php", $( "form[name=authForm]" ).serialize(), function( data ) {
+					alert(data.msg);
+					if(data.success == true){
+						
+						//핸드폰 인증 후 input 값 변경 불가
+						document.getElementById('mobileNum1').readOnly = true;
+						document.getElementById('mobileNum2').readOnly = true;
+						document.getElementById('mobileNum3').readOnly = true;
+						$('input[name=verifyNum]').focus();
+					}
+				}, "json");
+
+	
+		});
+		
+		//버튼클릭 : 인증번호 확인
+		$('#verifyBtn').click('on', function(){
+			
+			$.post( "proc.ajax.php", {mode:'smsConfirm', authNum:$('input[name=verifyNum]').val()}, function( data ) {
+				alert(data.msg);
+				if(data.success == true){
+					//location.href = 'index.php?mode=step_03';
+
+				
+					//post로 핸드폰번호를 회원가입 창에 뿌려주어야 함
+					var a = document.getElementById("mobileNum1").value;
+					var b = document.getElementById("mobileNum2").value;
+				    var c = document.getElementById("mobileNum3").value;
+
+					var form = document.createElement("form");     
+					form.setAttribute("method","post");                    
+					form.setAttribute("action","index.php?mode=step_03");        
+					document.body.appendChild(form); 
+
+					var input_id1 = document.createElement("input");
+					var input_id2 = document.createElement("input");  
+					var input_id3 = document.createElement("input");  
+
+					input_id1.setAttribute("type", "hidden");                 
+					input_id1.setAttribute("name", "mobileNum1");
+					input_id1.setAttribute("value",a);
+
+					input_id2.setAttribute("type", "hidden");                 
+					input_id2.setAttribute("name", "mobileNum2");
+					input_id2.setAttribute("value",b);
+
+					input_id3.setAttribute("type", "hidden");                 
+					input_id3.setAttribute("name", "mobileNum3");                            
+					input_id3.setAttribute("value",c);
+
+					form.appendChild(input_id1);
+					form.appendChild(input_id2);
+					form.appendChild(input_id3);
+					form.submit();
+
+				}
+			}, "json");
+
+		});
+	});
+
+
+
+</script>

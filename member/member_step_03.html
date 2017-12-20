@@ -1,0 +1,270 @@
+
+<!--step02로부터 인증받은 휴대폰 번호-->
+<?php
+	$mobileNum1 = $_POST['mobileNum1'];
+	$mobileNum2 = $_POST['mobileNum2'];
+	$mobileNum3 = $_POST['mobileNum3'];
+?>
+
+<div id="container" class="container-full">
+	<div id="content" class="content">
+		<div class="inner">
+			<div class="tit-box-h3">
+				<h3 class="tit-h3">회원가입</h3>
+				<div class="sub-depth">
+					<span><i class="icon-home"><span>홈</span></i></span>
+					<strong>회원가입</strong>
+				</div>
+			</div>
+
+			<div class="join-step-bar">
+				<ul>
+					<li><i class="icon-join-agree"></i> 약관동의</li>
+					<li><i class="icon-join-chk"></i> 본인확인</li>
+					<li class="last on"><i class="icon-join-inp"></i> 정보입력</li>
+				</ul>
+			</div>
+
+			<div class="section-content">
+				<table border="0" cellpadding="0" cellspacing="0" class="tbl-col-join">
+					<caption class="hidden">강의정보</caption>
+					<colgroup>
+						<col style="width:15%"/>
+						<col style="*"/>
+					</colgroup>
+					<form name="member_form">
+					<tbody>
+						<tr>
+							<th scope="col"><span class="icons">*</span>이름</th>
+							<td><input type="text" class="input-text" style="width:302px" id="reg_name" maxlength=30/></td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons">*</span>아이디</th>
+							<td><input type="text" class="input-text" style="width:302px" placeholder="영문자로 시작하는 4~15자의 영문소문자, 숫자" id="reg_id" name="reg_id"/><button type="button" class="btn-s-tin ml10" id="checkidBtn"><input type="hidden" id="re_checkid" value="n">중복확인</button>
+							<span id="msgBox"></span>
+							</td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons">*</span>비밀번호</th>
+							<td><input type="password" class="input-text" style="width:302px" placeholder="8-15자의 영문자/숫자 혼합" id="reg_pwd1" name = "reg_pwd1"/></span></td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons">*</span>비밀번호 확인</th>
+							<td><input type="password" class="input-text" style="width:302px" id="reg_pwd2"/><span id="msgbox_pwd"></span></td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons">*</span>이메일주소</th>
+							<td>
+								<input type="text" class="input-text" style="width:138px" id="reg_email1"/> @ <input type="text" class="input-text" style="width:138px" id="reg_email2"/>
+								<select class="input-sel" style="width:160px">
+									<option value="">선택입력</option>
+									<option value="">선택입력</option>
+									<option value="">선택입력</option>
+									<option value="">선택입력</option>
+									<option value="">선택입력</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons">*</span>휴대폰 번호</th>
+							<td>
+								<input type="text" class="input-text" style="width:50px" id="reg_mobile1" readonly value="<?php echo $mobileNum1 ?>" maxlength=3/> - 
+								<input type="text" class="input-text" style="width:50px" id="reg_mobile2" readonly value="<?php echo $mobileNum2 ?>" maxlength=4/> - 
+								<input type="text" class="input-text" style="width:50px" id="reg_mobile3" readonly value="<?php echo $mobileNum3 ?>" maxlength=4/>
+							</td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons"></span>일반전화 번호</th>
+							<td><input type="text" class="input-text" style="width:88px" id="reg_phone1" onkeydown="javascript:return inputOnlyNum(event);" maxlength=3/> - <input type="text" class="input-text" style="width:88px" id="reg_phone2" onkeydown="javascript:return inputOnlyNum(event);" maxlength=4/> - <input type="text" class="input-text" style="width:88px" id="reg_phone3" onkeydown="javascript:return inputOnlyNum(event);" maxlength=4/></td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons">*</span>주소</th>
+							<td>
+								<p >
+									<label>우편번호 <input type="text" class="input-text ml5" style="width:242px" readonly id="reg_zipcode"/></label><a href="#" class="btn-s-tin ml10" id="zipcodeBtn">주소찾기</a>
+								</p>
+								<p class="mt10">
+									<label>기본주소 <input type="text" class="input-text ml5" style="width:719px" id="reg_address1"/></label>
+								</p>
+								<p class="mt10">
+									<label>상세주소 <input type="text" class="input-text ml5" style="width:719px" id="reg_address2"/></label>
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons">*</span>SMS수신</th>
+							<td>
+								<div class="box-input">
+									<label class="input-sp">
+										<input type="radio" name="reg_sms_yn" checked="checked" id="reg_sms_yn" value="y"/>
+										<span class="input-txt">수신함</span>
+									</label>
+									<label class="input-sp">
+										<input type="radio" name="reg_sms_yn" id="reg_sms_yn" value="n"/>
+										<span class="input-txt">미수신</span>
+									</label>
+								</div>
+								<p>SMS수신 시, 해커스의 혜택 및 이벤트 정보를 받아보실 수 있습니다.</p>
+							</td>
+						</tr>
+						<tr>
+							<th scope="col"><span class="icons">*</span>메일수신</th>
+							<td>
+								<div class="box-input">
+									<label class="input-sp">
+										<input type="radio" name="reg_getmail_yn" checked="checked" id="reg_getmail_yn" value="y"/>
+										<span class="input-txt">수신함</span>
+									</label>
+									<label class="input-sp">
+										<input type="radio" name="reg_getmail_yn" id="reg_getmail_yn" value="n"/>
+										<span class="input-txt">미수신</span>
+									</label>
+								</div>
+								<p>메일수신 시, 해커스의 혜택 및 이벤트 정보를 받아보실 수 있습니다.</p>
+							</td>
+						</tr>
+					</tbody>
+					</form>
+				</table>
+
+				<div class="box-btn">
+					<a href="/test/member/index.php?mode=step_04" class="btn-l" id="submit">회원가입</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!--회원가입 내용 INSERT-->
+<script>
+
+		$("#submit").click(function(){
+			
+			
+			var obj = new Object();
+			obj.reg_name = $("#reg_name").val();
+			obj.reg_id = $("#reg_id").val();
+			obj.reg_pwd1 = $("#reg_pwd1").val();
+			obj.reg_pwd2 = $("#reg_pwd2").val();
+			obj.reg_email1 = $("#reg_email1").val();
+			obj.reg_email2 = $("#reg_email2").val();
+			obj.reg_mobile1 = $("#reg_mobile1").val();
+			obj.reg_mobile2 = $("#reg_mobile2").val();
+			obj.reg_mobile3 = $("#reg_mobile3").val();
+			obj.reg_phone1 = $("#reg_phone1").val();
+			obj.reg_phone2 = $("#reg_phone2").val();
+			obj.reg_phone3 = $("#reg_phone3").val();
+			obj.reg_zipcode = $("#reg_zipcode").val();
+			obj.reg_address1 = $("#reg_address1").val();
+			obj.reg_address2 = $("#reg_address2").val();
+			obj.reg_sms_yn = $('input:radio[id=reg_sms_yn]:checked').val();
+			obj.reg_getmail_yn = $('input:radio[id=reg_getmail_yn]:checked').val();
+			
+			//유효성체크 : 아이디 4자리에서 15자리 영문소문자, 숫자
+
+
+			//버튼 : 아이디 중복체크
+			if($("#re_checkid").val() == "n"){
+				alert("아이디를 체크해주시기 바랍니다.");
+				return false;
+			}
+
+			//유효성 체크 : 필수값
+			if(!obj.reg_name || !obj.reg_id || !obj.reg_pwd1 || !obj.reg_pwd2 || !obj.reg_email1 ||
+			   !obj.reg_email2 || !obj.reg_mobile1 || !obj.reg_mobile2 || !obj.reg_mobile3 ||
+			   !obj.reg_zipcode || !obj.reg_address1 || !obj.reg_address2 ||!obj.reg_sms_yn ||!obj.reg_getmail_yn){
+				
+				alert("필수입력란이 비었습니다. 확인해주세요");
+				return false;
+
+			}
+			
+			//유효성 체크 : 비밀번호 일치 여부
+			if(obj.reg_pwd1 != obj.reg_pwd2){
+				alert("비밀번호가 일치하지 않습니다.");
+				return false;
+			}
+			
+			//input 데이터 넘기기
+			$.ajax({
+				type: "POST", 
+				url: "./member_insert_db.php", 
+				data: 
+					({
+						arrayData:obj
+					}),
+				dataType: "text",
+				success: function(data){
+					alert(data);
+				}
+			});
+			
+
+		}); //submit 버튼 괄호닫기
+
+		//버튼클릭 : 아이디 중복체크
+		$("#checkidBtn").click('on', function(){
+
+			/*var idReg = /^[a-z]+[a-z0-9]{5,19}$/g;
+			
+			if( !idReg.test( $("input[name=reg_id]").val() ) ) {
+				$('input[name=reg_id]').focus();
+				//alert("아이디는 영문자로 시작하는 6~20자 영문자 또는 숫자이어야 합니다.");
+				return false;
+			}*/
+
+			$.post( "member_step_03_idcheck.php", {reg_id:$('input[name=reg_id]').val()}, function( data){
+
+				alert(data.msg);
+				$('input[name=reg_pwd1]').focus();
+				$("#re_checkid").val("y");
+				
+				if(data.success == true){
+					$('input[name=reg_id]').focus();
+					$("#re_checkid").val("n");
+				}
+			}, "json")
+
+		});
+		
+
+
+</script>
+
+<script>
+//휴대폰번호, 일반전화번호 숫자만 입력
+	function inputOnlyNum(event){
+		
+		var acode = event.keyCode;
+		
+		if(acode == 37 || acode == 39 || acode == 8 || acode == 127 || acode == 9 || (acode>47 && acode<58) || (acode>95 && acode<106)) {
+		}else{
+			return false; //숫자가 아닐때 작성이 안됨
+		}
+	}
+</script>
+
+
+<!--우편번호 api 적용-->
+
+<script>
+	$("#zipcodeBtn").click(function(){
+
+	new daum.Postcode({
+		oncomplete: function(data) {
+			document.getElementById("reg_zipcode").value = data.zonecode;
+			document.getElementById("reg_address1").value = data.address;
+
+		}
+	}).open();
+
+	});
+
+</script>
+
+
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+
+
+

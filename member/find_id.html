@@ -1,0 +1,224 @@
+
+<div id="container" class="container-full">
+	<div id="content" class="content">
+		<div class="inner">
+			<div class="tit-box-h3">
+				<h3 class="tit-h3">아이디/비밀번호 찾기</h3>
+				<div class="sub-depth">
+					<span><i class="icon-home"><span>홈</span></i></span>
+					<strong>아이디/비밀번호 찾기</strong>
+				</div>
+			</div>
+
+			<ul class="tab-list">
+				<li class="on"><a href="#">아이디 찾기</a></li>
+				<li><a href="/test/member/index.php?mode=find_pwd">비밀번호 찾기</a></li>
+			</ul>
+
+			<div class="tit-box-h4">
+				<h3 class="tit-h4">아이디 찾기 방법 선택</h3>
+			</div>
+			<dl class="find-box">
+				<dt>휴대폰 인증</dt>
+				<dd>
+					고객님이 회원 가입 시 등록한 휴대폰 번호와 입력하신 휴대폰 번호가 동일해야 합니다.
+					<label class="input-sp big">
+						<input type="radio" name="radio" id="auth_method1" checked="checked"/>
+						<span class="input-txt"></span>
+					</label>
+				</dd>
+			</dl>
+
+			<dl class="find-box">
+				<dt>이메일 인증</dt>
+				<dd>
+					고객님이 회원 가입 시 등록한 이메일 주소와 입력하신 이메일 주소가 동일해야 합니다.
+					<label class="input-sp big">
+						<input type="radio" name="radio" id="auth_method2" />
+						<span class="input-txt"></span>
+					</label>
+				</dd>
+			</dl>
+
+			<div class="section-content mt30">
+			<form action="find_id_complete.html" id="form_fi" method="post">
+				<table border="0" cellpadding="0" cellspacing="0" class="tbl-col-join">
+					<caption class="hidden">아이디 찾기 개인정보 입력</caption>
+					<colgroup>
+						<col style="width:15%"/>
+						<col style="*"/>
+					</colgroup>
+
+					<tbody>
+						<tr>
+							<th scope="col">성명</th>
+							<td><input type="text" class="input-text" style="width:302px" id ="name" name="name"/></td>
+						</tr>
+						<tr id = "bymobile_tr">
+							<th scope="col">휴대폰번호</th>
+							<td>
+								<input type="text" class="input-text" style="width:138px" id="mo1" name="mo1" maxlength="3"/> - <input type="text" class="input-text" style="width:138px" id="mo2" name="mo2" maxlength="4"/> - <input type="text" class="input-text" style="width:138px" id="mo3" name="mo3" maxlength="4"/><input type="hidden" id="test" name="test" value="n" />
+								<a href="#" class="btn-s-tin ml10" id="auth_bymobile" name="auth_bymobile">인증번호 받기</a>
+							</td>
+						</tr>
+						<tr id = "byemail_tr">
+							<th scope="col">이메일주소</th>
+							<td>
+								<input type="text" class="input-text" style="width:138px" id="email1" name="email1"/> @ <input type="text" class="input-text" style="width:138px" id="email2" name="email2"/>
+								<select class="input-sel" style="width:160px">
+									<option value="">선택입력</option>
+									<option value="">선택입력</option>
+									<option value="">선택입력</option>
+									<option value="">선택입력</option>
+									<option value="">선택입력</option>
+								</select>
+								<a href="#" class="btn-s-tin ml10"  id="auth_byemail" name="auth_byemail">인증번호 받기</a>
+							</td>
+						</tr>
+						<tr>
+							<th scope="col" id="number" />인증번호</th>
+							<td><input type="text" class="input-text" style="width:478px" name="security_num" id="security_num"/>
+							<input type="button" class="btn-s-tin ml10" id="submit2" name="submit2" value="인증번호 확인" />
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+
+		$(document).ready(function(){
+
+			var bymobile_tr = document.getElementById('bymobile_tr').style;
+			var byemail_tr = document.getElementById('byemail_tr').style;
+			bymobile_tr.display="";
+			byemail_tr.display="none";
+
+			//휴대폰인증을 선택했을때
+			$("#auth_method1").click(function(){
+				
+				//휴대폰인증 라디오 버튼 눌렀을때 폼형태 휴대폰인증으로 변경
+				var auth_method = $('input:radio[name=radio]:checked').val();								
+				bymobile_tr.display="";
+				byemail_tr.display="none";
+
+			});
+			
+			//이메일인증 선택
+			$("#auth_method2").click(function(){
+				
+				var auth_method = $('input:radio[name=radio]:checked').val();
+				bymobile_tr.display="none";
+				byemail_tr.display="";
+			
+			});
+
+			//휴대폰인증 선택 > DB값 비교 > return 값으로 인증번호 받기 버튼 상태값 조정
+			$("#auth_bymobile").click(function(){
+
+				//mo1, mo2, mo3 입력값 ajax와 DB확인
+				var name = $("#name").val();
+				var mo1 = $("#mo1").val();
+				var mo2 = $("#mo2").val();
+				var mo3 = $("#mo3").val();
+				var test_ ;
+
+				$.ajax({
+						type: "POST", 
+						url: "auth_byphone.php", 
+						async:false,
+						data: ({
+								name:name,
+								mo1:mo1,
+								mo2:mo2,
+								mo3:mo3
+							  }),
+						dataType: "text",
+						success: function(data){
+								
+								test_ = data;
+						}
+									
+				}); 
+
+				if(test_ == 1){ //가입된 회원인경우
+					
+					document.getElementById('name').readOnly = true;
+					document.getElementById('mo1').readOnly = true;
+					document.getElementById('mo2').readOnly = true;
+					document.getElementById('mo3').readOnly = true;
+					$("#test").val("y");
+					alert("가입된 회원입니다. 인증번호를 확인해주세요.");
+
+				}else{
+					$("#test").val("n");
+					alert("가입되지 않은 회원입니다. 정보를 확인해주세요.");
+				}
+
+			});
+
+
+			//이메일인증 선택 > DB값 비교 > return 값으로 인증번호 받기 버튼 상태값 조정
+			$("#auth_byemail").click(function(){
+
+				//mo1, mo2, mo3 입력값 ajax와 DB확인
+				var name = $("#name").val();
+				var email1 = $("#email1").val();
+				var email2 = $("#email2").val();
+				var test_ = "";
+				
+				alert(name);
+				alert(email1)
+				alert(email2);
+
+				$.ajax({
+						type: "POST", 
+						url: "auth_byemail.php", 
+						async:false,
+						data: ({
+								name:name,
+								email1:email1,
+								email2:email2
+							  }),
+						dataType: "text",
+						success: function(data){
+								test_ = data;
+						}			
+				}); 
+
+				if(test_ == 1){ //가입된 회원인경우
+
+					document.getElementById('name').readOnly = true;
+					document.getElementById('email1').readOnly = true;
+					document.getElementById('email2').readOnly = true;
+					$("#test").val("y");
+					alert("가입된 회원입니다. 인증번호를 확인해주세요.");
+
+				}else{
+
+					$("#test").val("n");
+					alert("가입되지 않은 회원입니다. 정보를 확인해주세요.");
+
+				}
+
+			});
+
+			
+			//인증번호 확인 눌렀을 때 href 넘어감
+			$('#submit2').click(function(){
+
+				if($("#test").val() == "y" && $("#security_num").val() == "123456"){ //인증번호받기했고, 인증번호 맞는경우만 다음페이지로 보냄
+					$('#form_fi').submit();
+				}else{
+					return false;
+				}
+			});
+
+			
+		});
+	
+</script>
